@@ -216,4 +216,32 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(401);
         $response->assertJson(['message' => 'Unauthenticated.']);
     }
+
+    // Test forgotPassword success response.
+    public function testForgotPasswordSuccess()
+    {
+        // Create a user
+        $user = User::factory()->create([
+            'email' => 'user@example.com',
+        ]);
+
+        // Call the service method
+        $authService = new AuthService();
+        $result = $authService->forgotPassword($user->email);
+
+        // Assertions
+        $this->assertTrue($result['status']);
+        $this->assertEquals('We have emailed your password reset link.', $result['message']);
+    }
+    // Test forgotPassword failure response with invalid email.
+    public function testForgotPasswordFailure()
+    {
+        // Call the service method with an email that doesn't exist
+        $authService = new AuthService();
+        $result = $authService->forgotPassword('nonexistent@example.com');
+
+        // Assertions
+        $this->assertFalse($result['status']);
+        $this->assertEquals('We can\'t find a user with that email address.', $result['message']);
+    }
 }
