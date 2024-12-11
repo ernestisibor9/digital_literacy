@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Feature;
 
 use App\Models\User;
@@ -243,5 +244,56 @@ class AuthControllerTest extends TestCase
         // Assertions
         $this->assertFalse($result['status']);
         $this->assertEquals('We can\'t find a user with that email address.', $result['message']);
+    }
+
+    // Test the profile method for an authenticated admin user.
+    public function test_admin_can_view_profile()
+    {
+        // Create a user with the admin role
+        $admin = User::factory()->create([
+            'role' => 'admin',
+        ]);
+
+        // Act as the created admin user
+        $this->actingAs($admin);
+
+        // Send a GET request to the profile route
+        $response = $this->getJson('/profile');
+
+        // Assert the response status is 200 (OK)
+        $response->assertStatus(200);
+
+        // Assert the JSON structure of the response
+        $response->assertJsonStructure([
+            'success',
+            'data' => [
+                'id',
+                'name',
+                'email',
+                'role',
+                'created_at',
+                'updated_at',
+            ],
+        ]);
+
+        // Assert the response contains the correct data
+        $response->assertJson([
+            'success' => true,
+            'data' => [
+                'id' => $admin->id,
+                'name' => $admin->name,
+                'email' => $admin->email,
+                'role' => $admin->role,
+            ],
+        ]);
+    }
+    // Test that a non-authenticated user cannot access the profile route.
+    public function test_guest_cannot_view_profile()
+    {
+        // Send a GET request without authentication
+        $response = $this->getJson('/profile');
+
+        // Assert the response status is 401 (Unauthorized)
+        $response->assertStatus(401);
     }
 }

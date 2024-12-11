@@ -17,7 +17,25 @@ class AuthService
     {
         // Create the user with the provided data
         $user = User::create([
-            'name' => $data['name'],
+            'firstname' => $data['firstname'],
+            'lastname' => $data['lastname'],
+            'middlename' => $data['middlename'],
+            'phone' => $data['phone'],
+            'date_of_birth' => $data['date_of_birth'],
+            'marital_status' => $data['marital_status'],
+            'whatsapp' => $data['whatsapp'],
+            'gender' => $data['gender'],
+            'residential_address' => $data['residential_address'],
+            'country' => $data['country'],
+            'state' => $data['state'],
+            'lga' => $data['lga'],
+            'occupation' => $data['occupation'],
+            'occupation_name' => $data['occupation_name'],
+            'occupation_address' => $data['occupation_address'],
+            'next_of_kin' => $data['next_of_kin'],
+            'next_of_kin_relationship' => $data['next_of_kin_relationship'],
+            'next_of_kin_address' => $data['next_of_kin_address'],
+            'next_of_kin_phone_number' => $data['next_of_kin_phone_number'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
