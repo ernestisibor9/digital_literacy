@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,8 +34,8 @@ Route::prefix('v1')->group(function () {
 Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
-       // User-only routes
-       Route::middleware(['role:user'])->group(function () {
+    // User-only routes
+    Route::middleware(['role:user'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'profile']);
         Route::put('/update-profile/{id}', [ProfileController::class, 'updateProfile']);
         Route::put('/update-password/{id}', [ProfileController::class, 'updatePassword']);
@@ -42,6 +43,6 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     // Admin-only routes
     Route::middleware(['role:admin'])->group(function () {
-        // Route::get('/profile', [ProfileController::class, 'profile']);
+        Route::apiResource('course', CourseController::class);
     });
 });

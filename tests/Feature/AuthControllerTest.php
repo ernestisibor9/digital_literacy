@@ -22,7 +22,9 @@ class AuthControllerTest extends TestCase
     {
         // Define valid registration data
         $data = [
-            'name' => 'John Doe',
+            'firstname' => 'John',
+            'lastname' => 'Doe',
+            'middlename' => 'Solomon',
             'email' => 'john.doe@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
@@ -37,7 +39,7 @@ class AuthControllerTest extends TestCase
         // Assert that the response contains 'message', 'user', and 'token'
         $response->assertJsonStructure([
             'message',
-            'user' => ['id', 'name', 'email'],
+            'user' => ['id', 'firstname', 'email'],
             'token',
         ]);
 
@@ -76,7 +78,8 @@ class AuthControllerTest extends TestCase
     {
         // Define invalid registration data (passwords do not match)
         $data = [
-            'name' => 'John Doe',
+            'firstname' => 'John',
+            'lastname' => 'Doe',
             'email' => 'john.doe@example.com',
             'password' => 'password123',
             'password_confirmation' => 'differentpassword',
@@ -97,14 +100,14 @@ class AuthControllerTest extends TestCase
     {
         // Create a user in the database
         $existingUser = User::create([
-            'name' => 'Jane Doe',
+            'firstname' => 'Jane Doe',
             'email' => 'jane.doe@example.com',
             'password' => bcrypt('password123'),
         ]);
 
         // Define registration data with an email that already exists
         $data = [
-            'name' => 'John Doe',
+            'firstname' => 'John Doe',
             'email' => 'jane.doe@example.com',  // Duplicate email
             'password' => 'password123',
             'password_confirmation' => 'password123',
@@ -268,7 +271,7 @@ class AuthControllerTest extends TestCase
             'success',
             'data' => [
                 'id',
-                'name',
+                'firstname',
                 'email',
                 'role',
                 'created_at',
@@ -281,7 +284,7 @@ class AuthControllerTest extends TestCase
             'success' => true,
             'data' => [
                 'id' => $admin->id,
-                'name' => $admin->name,
+                'firstname' => $admin->firstname,
                 'email' => $admin->email,
                 'role' => $admin->role,
             ],
