@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CourseStoreRequest extends FormRequest
@@ -23,7 +24,16 @@ class CourseStoreRequest extends FormRequest
     {
         return [
             //
-            'instructor_id' => 'required|exists:users,id',
+            'instructor_id' => [
+                'required',
+                'exists:users,id',
+                function ($attribute, $value, $fail){
+                    $user = User::find($value);
+                    if($user && $user->role !== 'instructor'){
+                        $fail('The selected instructor is not a valid instructor');
+                    }
+                }
+            ],
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
